@@ -209,7 +209,7 @@ Calculada a partir das partidas `FINALIZADAS` de uma modalidade:
 
 Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 
-### Fase 1 — Fundamentos
+### Fase 1 — Fundamentos — Duda, Julia e Vitoria 
 - [ ] **1. Criar as tabelas restantes** (`turma`, `modalidade`, `inscricao`, `partida`, `configuracao`)
       com as chaves estrangeiras apontando para as tabelas existentes.
       Dica: adicione o `CREATE TABLE` dentro de `Conexao.criarTabelas`.
