@@ -209,7 +209,7 @@ Calculada a partir das partidas `FINALIZADAS` de uma modalidade:
 
 Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 
-### Fase 1 — Fundamentos — Duda, Julia e Vitoria 
+### Fase 1 — Fundamentos — Duda
 - [ ] **1. Criar as tabelas restantes** (`turma`, `modalidade`, `inscricao`, `partida`, `configuracao`)
       com as chaves estrangeiras apontando para as tabelas existentes.
       Dica: adicione o `CREATE TABLE` dentro de `Conexao.criarTabelas`.
@@ -218,7 +218,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - [ ] **3. Criar os DAOs** correspondentes, com os 5 métodos CRUD
       (veja `TimeDao` como referência).
 
-### Fase 2 — CRUDs e rotas
+### Fase 2 — CRUDs e rotas - Vitoria
 - [ ] **4. `TurmaController`** — `/api/turmas` (GET, POST, PUT, DELETE)
 - [ ] **5. `ModalidadeController`** — `/api/modalidades` (GET, POST, PUT, DELETE),
       incluindo ativar/desativar a modalidade.
@@ -232,7 +232,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
       - atualizar placar (só se não estiver `FINALIZADA`)
       - finalizar partida
 
-### Fase 3 — Regras avançadas
+### Fase 3 — Regras avançadas — Jolea
 - [ ] **8. `ConfiguracaoDao` + rota** — ler e alterar `PONTOS_VITORIA`, `PONTOS_EMPATE`,
       `PONTOS_DERROTA`, `PERMITE_EMPATE`.
 - [ ] **9. `ClassificacaoController`** — `/api/classificacao?modalidadeId=1`:
@@ -241,7 +241,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - [ ] **11. Proteger as rotas de escrita** — mover o CRUD de organizers para `/api/admin/*`
       (já existe o `OrganizadorFilter`) e deixar as rotas de leitura livres para logados.
 
-### Fase 4 — Acabamento
+### Fase 4 — Acabamento — Jolea
 - [ ] **12. Validações** — nome obrigatório, email válido, campos não vazios,
       mensagens de erro claras em JSON.
 - [ ] **13. Documentar** — documentar todas as rotas no README e adicionar exemplos
