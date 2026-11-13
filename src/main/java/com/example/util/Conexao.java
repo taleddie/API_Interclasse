@@ -42,16 +42,16 @@ public class Conexao {
      * Script das tabelas usadas pela base. Alunos podem ampliar este script
      * conforme implementam as atividades do README.
      */
-    private static void criarTabelas(Connection conn) throws SQLException {
+   private static void criarTabelas(Connection conn) throws SQLException {
         String[] scripts = {
             """
             CREATE TABLE IF NOT EXISTS usuario (
-                id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome     TEXT    NOT NULL,
-                email    TEXT    NOT NULL UNIQUE,
-                senha    TEXT    NOT NULL,
-                tipo     TEXT    NOT NULL DEFAULT 'PARTICIPANTE'
-                             CHECK (tipo IN ('PARTICIPANTE', 'ORGANIZADOR')),
+                id      INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome    TEXT    NOT NULL,
+                email   TEXT    NOT NULL UNIQUE,
+                senha   TEXT    NOT NULL,
+                tipo    TEXT    NOT NULL DEFAULT 'PARTICIPANTE'
+                        CHECK (tipo IN ('PARTICIPANTE', 'ORGANIZADOR')),
                 criado_em TEXT    NOT NULL DEFAULT (datetime('now'))
             )
             """,
@@ -71,7 +71,66 @@ public class Conexao {
                 criado_em   TEXT    NOT NULL DEFAULT (datetime('now'))
             )
             """,
-            "INSERT OR IGNORE INTO chave_mestra (chave) VALUES ('ETEC-INTERCLASSE-2026')"
+            "INSERT OR IGNORE INTO chave_mestra (chave) VALUES ('ETEC-INTERCLASSE-2026')",
+            
+            /*** tabelas novas ***/
+            """
+            CREATE TABLE IF NOT EXISTS turma (
+                turmaid INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome    TEXT    NOT NULL,
+                curso   TEXT    NOT NULL,
+                ano     INTEGER NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS modalidade (
+                modalidadeid INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome         TEXT    NOT NULL,
+                ativo        INTEGER NOT NULL DEFAULT 1
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS inscricao (
+                inscricaoid   INTEGER PRIMARY KEY AUTOINCREMENT,
+                time_id       INTEGER NOT NULL,
+                modalidade_id INTEGER NOT NULL,
+                data_inscricao TEXT   NOT NULL DEFAULT (datetime('now')),
+                status        TEXT    NOT NULL DEFAULT 'PENDENTE'
+                              CHECK (status IN ('PENDENTE', 'CONFIRMADA', 'NEGADA')),
+                FOREIGN KEY (time_id) REFERENCES time(id),
+                FOREIGN KEY (modalidade_id) REFERENCES modalidade(modalidadeid)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS partida (
+                partidaid     INTEGER PRIMARY KEY AUTOINCREMENT,
+                modalidade_id INTEGER NOT NULL,
+                time_a_id     INTEGER NOT NULL,
+                time_b_id     INTEGER NOT NULL,
+                placar_a      INTEGER NOT NULL DEFAULT 0,
+                placar_b      INTEGER NOT NULL DEFAULT 0,
+                data          TEXT,
+                hora          TEXT,
+                local         TEXT,
+                fase          TEXT    NOT NULL DEFAULT 'AVULSO',
+                status        TEXT    NOT NULL DEFAULT 'AGENDADA'
+                              CHECK (status IN ('AGENDADA', 'EM_ANDAMENTO', 'FINALIZADA', 'CANCELADA')),
+                FOREIGN KEY (modalidade_id) REFERENCES modalidade(modalidadeid),
+                FOREIGN KEY (time_a_id) REFERENCES time(id),
+                FOREIGN KEY (time_b_id) REFERENCES time(id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS configuracao (
+                chave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+            """,
+
+            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_VITORIA', '3')",
+            "INSERT OR IGNORE INTO configuracao (chave, valor) PRIVILEGES INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_EMPATE', '1')",
+            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_DERROTA', '0')",
+            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PERMITE_EMPATE', '1')"
         };
 
         try (Statement stmt = conn.createStatement()) {
