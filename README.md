@@ -209,7 +209,7 @@ Calculada a partir das partidas `FINALIZADAS` de uma modalidade:
 
 Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 
-### Fase 1 — Fundamentos — Duda
+### Fase 1 — Fundamentos — Vitoria
 - [X] **1. Criar as tabelas restantes** (`turma`, `modalidade`, `inscricao`, `partida`, `configuracao`)
       com as chaves estrangeiras apontando para as tabelas existentes.
       Dica: adicione o `CREATE TABLE` dentro de `Conexao.criarTabelas`.
@@ -218,7 +218,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - [ ] **3. Criar os DAOs** correspondentes, com os 5 métodos CRUD
       (veja `TimeDao` como referência).
 
-### Fase 2 — CRUDs e rotas - Vitoria
+### Fase 2 — CRUDs e rotas - Duda
 - [ ] **4. `TurmaController`** — `/api/turmas` (GET, POST, PUT, DELETE)
 - [ ] **5. `ModalidadeController`** — `/api/modalidades` (GET, POST, PUT, DELETE),
       incluindo ativar/desativar a modalidade.
