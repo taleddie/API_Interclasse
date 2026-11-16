@@ -219,14 +219,14 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
       (veja `TimeDao` como referência).
 
 ### Fase 2 — CRUDs e rotas - Duda
-- [ ] **4. `TurmaController`** — `/api/turmas` (GET, POST, PUT, DELETE)
-- [ ] **5. `ModalidadeController`** — `/api/modalidades` (GET, POST, PUT, DELETE),
+- [X] **4. `TurmaController`** — `/api/turmas` (GET, POST, PUT, DELETE)
+- [X] **5. `ModalidadeController`** — `/api/modalidades` (GET, POST, PUT, DELETE),
       incluindo ativar/desativar a modalidade.
-- [ ] **6. `InscricaoController`** — `/api/inscricoes`:
+- [X] **6. `InscricaoController`** — `/api/inscricoes`:
       - listar todas e listar por modalidade (`?modalidadeId=`)
       - inscribed time (com validação de **1 time por modalidade**)
       - alterar status (`PENDENTE` → `CONFIRMADA`/`NEGADA`), somente organizador
-- [ ] **7. `PartidaController`** — `/api/partidas`:
+- [X] **7. `PartidaController`** — `/api/partidas`:
       - listar com filtros (`?modalidadeId=`, `?status=`, `?data=`)
       - agendar partida, validando: mesma modalidade, times confirmados, times diferentes
       - atualizar placar (só se não estiver `FINALIZADA`)
