@@ -128,7 +128,7 @@ public class Conexao {
             """,
 
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_VITORIA', '3')",
-            "INSERT OR IGNORE INTO configuracao (chave, valor) PRIVILEGES INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_EMPATE', '1')",
+            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_EMPATE', '1')",
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_DERROTA', '0')",
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PERMITE_EMPATE', '1')"
         };
