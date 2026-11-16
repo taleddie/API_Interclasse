@@ -213,7 +213,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - [X] **1. Criar as tabelas restantes** (`turma`, `modalidade`, `inscricao`, `partida`, `configuracao`)
       com as chaves estrangeiras apontando para as tabelas existentes.
       Dica: adicione o `CREATE TABLE` dentro de `Conexao.criarTabelas`.
-- [] **2. Criar os Models** `Turma`, `Modalidade`, `Inscricao`, `Partida`, `Configuracao`
+- [ ] **2. Criar os Models** `Turma`, `Modalidade`, `Inscricao`, `Partida`, `Configuracao`
       (use `Time` e `Usuario` como modelo).
 - [ ] **3. Criar os DAOs** correspondentes, com os 5 métodos CRUD
       (veja `TimeDao` como referência).
