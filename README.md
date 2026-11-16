@@ -251,7 +251,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 
 ### Bônus
 - [ ] **15.** Chaveamento: grupos + mata-mata (`fase` = `GRUPOS`, `QUARTAS`, `SEMI`, `FINAL`).
-- [ ] **16.** Ranking individual (gols/assistências dos jogadores).
+- [X] **16.** Ranking individual (gols/assistências dos jogadores). - Duda
 - [ ] **17.** Exportar a classificação em CSV.
 
 ---

@@ -130,7 +130,18 @@ public class Conexao {
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_VITORIA', '3')",
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_EMPATE', '1')",
             "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PONTOS_DERROTA', '0')",
-            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PERMITE_EMPATE', '1')"
+            "INSERT OR IGNORE INTO configuracao (chave, valor) VALUES ('PERMITE_EMPATE', '1')",
+
+            """
+            CREATE TABLE IF NOT EXISTS jogador (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome          TEXT    NOT NULL,
+                time_id       INTEGER NOT NULL,
+                gols          INTEGER NOT NULL DEFAULT 0,
+                assistencias  INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (time_id) REFERENCES time(id)
+            )
+            """
         };
 
         try (Statement stmt = conn.createStatement()) {
