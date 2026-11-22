@@ -10,24 +10,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfiguracaoDao {
+public class ConfiguracaoDAO {
 
-    private static final String SQL_LISTAR = "SELECT chave, valor FROM configuracao ORDER BY chave";
-    private static final String SQL_BUSCAR = "SELECT chave, valor FROM configuracao WHERE chave = ?";
-    private static final String SQL_INSERIR = "INSERT INTO configuracao (chave, valor) VALUES (?, ?)";
+    private static final String SQL_LISTAR = "SELECT * FROM configuracao ORDER BY chave";
+    private static final String SQL_BUSCAR = "SELECT * FROM configuracao WHERE chave = ?";
     private static final String SQL_ATUALIZAR = "UPDATE configuracao SET valor = ? WHERE chave = ?";
-    private static final String SQL_DELETAR = "DELETE FROM configuracao WHERE chave = ?";
 
     public List<Configuracao> listar() throws SQLException {
-        List<Configuracao> configuracoes = new ArrayList<>();
+        List<Configuracao> lista = new ArrayList<>();
         Connection conn = Conexao.getConexao();
         try (PreparedStatement ps = conn.prepareStatement(SQL_LISTAR);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                configuracoes.add(mapear(rs));
+                lista.add(mapear(rs));
             }
         }
-        return configuracoes;
+        return lista;
     }
 
     public Configuracao buscarPorChave(String chave) throws SQLException {
@@ -40,30 +38,24 @@ public class ConfiguracaoDao {
         }
     }
 
-    public Configuracao inserir(Configuracao configuracao) throws SQLException {
-        Connection conn = Conexao.getConexao();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_INSERIR)) {
-            ps.setString(1, configuracao.getChave());
-            ps.setString(2, configuracao.getValor());
-            ps.executeUpdate();
-        }
-        return configuracao;
-    }
-
-    public boolean atualizar(Configuracao configuracao) throws SQLException {
+    public boolean atualizar(Configuracao config) throws SQLException {
         Connection conn = Conexao.getConexao();
         try (PreparedStatement ps = conn.prepareStatement(SQL_ATUALIZAR)) {
-            ps.setString(1, configuracao.getValor());
-            ps.setString(2, configuracao.getChave());
+            ps.setString(1, config.getValor());
+            ps.setString(2, config.getChave());
             return ps.executeUpdate() > 0;
         }
     }
 
-    public boolean deletar(String chave) throws SQLException {
-        Connection conn = Conexao.getConexao();
-        try (PreparedStatement ps = conn.prepareStatement(SQL_DELETAR)) {
-            ps.setString(1, chave);
-            return ps.executeUpdate() > 0;
+    public int buscarInt(String chave, int padrao) throws SQLException {
+        Configuracao config = buscarPorChave(chave);
+        if (config == null || config.getValor() == null) {
+            return padrao;
+        }
+        try {
+            return Integer.parseInt(config.getValor().trim());
+        } catch (NumberFormatException e) {
+            return padrao;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.dao;
 
+<<<<<<< HEAD
 import com.example.model.Partida;
 import com.example.util.Conexao;
 
@@ -130,4 +131,7 @@ public class PartidaDAO {
         partida.setStatus(rs.getString("status"));
         return partida;
     }
+=======
+public class PartidaDAO {
+>>>>>>> 11906ed5b6a565a919bd8e422d62f6577006cc64
 }
