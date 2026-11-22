@@ -1,6 +1,5 @@
 package com.example.dao;
 
-<<<<<<< HEAD
 import com.example.model.Modalidade;
 import com.example.util.Conexao;
 
@@ -83,7 +82,4 @@ public class ModalidadeDAO {
         modalidade.setAtivo(rs.getInt("ativo"));
         return modalidade;
     }
-=======
-public class ModalidadeDAO {
->>>>>>> 11906ed5b6a565a919bd8e422d62f6577006cc64
 }

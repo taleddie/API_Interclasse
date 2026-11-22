@@ -1,6 +1,5 @@
 package com.example.dao;
 
-<<<<<<< HEAD
 import com.example.model.Inscricao;
 import com.example.util.Conexao;
 
@@ -137,7 +136,4 @@ public class InscricaoDAO {
         inscricao.setStatus(rs.getString("status"));
         return inscricao;
     }
-=======
-public class InscricaoDAO {
->>>>>>> 11906ed5b6a565a919bd8e422d62f6577006cc64
 }

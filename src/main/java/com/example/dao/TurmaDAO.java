@@ -1,6 +1,5 @@
 package com.example.dao;
 
-<<<<<<< HEAD
 import com.example.model.Turma;
 import com.example.util.Conexao;
 
@@ -86,7 +85,4 @@ public class TurmaDAO {
         turma.setAno(rs.getInt("ano"));
         return turma;
     }
-=======
-public class TurmaDAO {
->>>>>>> 11906ed5b6a565a919bd8e422d62f6577006cc64
 }
