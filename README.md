@@ -245,9 +245,9 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - [X] **12. Validações** — nome obrigatório, email válido, campos não vazios,
       mensagens de erro claras em JSON.
 - [X] **13. Documentar** — documentar todas as rotas no README e adicionar exemplos
-      de requisição/resposta (curl ou Postman).
+      de requisição/resposta (curl ou Postman). - Duda
 - [X] **14. Testes manuais** — checklist de teste de cada rota (entrada válida, entrada
-      inválida, sem permissão, recurso inexistente).
+      inválida, sem permissão, recurso inexistente). - Duda
 
 ### Bônus
 - [ ] **15.** Chaveamento: grupos + mata-mata (`fase` = `GRUPOS`, `QUARTAS`, `SEMI`, `FINAL`).
@@ -264,3 +264,44 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - **Datas:** texto no formato `yyyy-MM-dd` (`2026-11-20`).
 - **SQL:** sempre `PreparedStatement`, nunca concatenar string.
 - **Controller:** valida a entrada, chama o DAO e monta a resposta. Sem SQL na controller.
+
+- ## 9. Testes manuais
+
+Todos os comandos usam o `curl.exe` no **PowerShell do Windows**. O `--%` logo depois do `curl.exe` evita que o PowerShell estrague as aspas do JSON. No CMD, Linux ou Mac, tire o `--%` e use `curl`.
+
+Base da URL: `http://localhost:8082/api` (subir com `mvn tomcat7:run`).
+O `-c cookies.txt` salva a sessão e o `-b cookies.txt` usa a sessão salva.
+
+> Os ids (1, 2...) valem para um banco novo. Para começar do zero, pare o servidor, apague o `interclasse.db` e suba de novo.
+
+### 9.1 Preparação
+
+```powershell
+# Teste rápido da API (use a barra no final)
+curl.exe -i http://localhost:8082/api/
+
+# Cadastra organizador
+curl.exe --% -X POST http://localhost:8082/api/auth/registrar-organizador -H "Content-Type: application/json" -d "{\"nome\":\"Prof Salomao\",\"email\":\"salomao@etec.sp.gov.br\",\"senha\":\"123456\",\"chaveMestra\":\"ETEC-INTERCLASSE-2026\"}"
+
+# Login (salva a sessão)
+curl.exe --% -X POST http://localhost:8082/api/auth/login -H "Content-Type: application/json" -c cookies.txt -d "{\"email\":\"salomao@etec.sp.gov.br\",\"senha\":\"123456\"}"
+
+# Confere o usuário logado
+curl.exe --% http://localhost:8082/api/auth/me -b cookies.txt
+```
+
+### 9.2 Fluxo completo (caminho feliz)
+
+```powershell
+# 1. Modalidade e times
+curl.exe --% -X POST http://localhost:8082/api/modalidades -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"FUTSAL\"}"
+curl.exe --% -X POST http://localhost:8082/api/times -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"Time A\"}"
+curl.exe --% -X POST http://localhost:8082/api/times -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"Time B\"}"
+
+# 2. Inscrições (nascem PENDENTE)
+curl.exe --% -X POST http://localhost:8082/api/inscricoes -H "Content-Type: application/json" -b cookies.txt -d "{\"timeId\":1,\"modalidadeId\":1}"
+curl.exe --% -X POST http://localhost:8082/api/inscricoes -H "Content-Type: application/json" -b cookies.txt -d "{\"timeId\":2,\"modalidadeId\":1}"
+
+# 3. Organizador confirma
+curl.exe --% -X PUT "http://localhost:8082/api/inscricoes?id=1" -H "Content-Type: application/json" -b cookies.txt -d "{\"status\":\"CONFIRMADA\"}"
+curl.exe --% -X PUT "http://localhost:8082/api/inscricoes?id=2" -H "Content-Type:
