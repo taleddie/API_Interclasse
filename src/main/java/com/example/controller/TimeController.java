@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dao.TimeDao;
+import com.example.dao.TimeDAO;
 import com.example.model.Time;
 import com.example.util.JsonUtil;
 
@@ -26,7 +26,7 @@ import java.util.List;
 @WebServlet("/times")
 public class TimeController extends HttpServlet {
 
-    private TimeDao dao = new TimeDao();
+    private TimeDAO dao = new TimeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

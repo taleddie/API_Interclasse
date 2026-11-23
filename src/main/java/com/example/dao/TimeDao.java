@@ -1,8 +1,5 @@
 package com.example.dao;
 
-import com.example.model.Time;
-import com.example.util.Conexao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.model.Time;
+import com.example.util.Conexao;
+
 /**
  * DAO de exemplo com as operacoes basicas de um CRUD.
  * Os alunos podem usar este arquivo como modelo para criar os demais DAOs.
  */
-public class TimeDao {
+public class TimeDAO {
 
     private static final String SQL_LISTAR = "SELECT * FROM time ORDER BY nome";
     private static final String SQL_BUSCAR = "SELECT * FROM time WHERE id = ?";

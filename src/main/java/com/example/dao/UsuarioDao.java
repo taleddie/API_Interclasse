@@ -12,7 +12,7 @@ import java.sql.Statement;
 /**
  * DAO de Usuario (base do sistema de login).
  */
-public class UsuarioDao {
+public class UsuarioDAO {
 
     private static final String SQL_BUSCAR_EMAIL = "SELECT * FROM usuario WHERE email = ?";
     private static final String SQL_BUSCAR_ID = "SELECT * FROM usuario WHERE id = ?";

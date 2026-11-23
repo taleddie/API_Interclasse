@@ -1,20 +1,5 @@
 package com.example.controller;
 
-import com.example.dao.ConfiguracaoDAO;
-import com.example.dao.InscricaoDAO;
-import com.example.dao.PartidaDAO;
-import com.example.dao.TimeDao;
-import com.example.model.ClassificacaoLinha;
-import com.example.model.Inscricao;
-import com.example.model.Partida;
-import com.example.model.Time;
-import com.example.util.JsonUtil;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,12 +8,28 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.example.dao.ConfiguracaoDAO;
+import com.example.dao.InscricaoDAO;
+import com.example.dao.PartidaDAO;
+import com.example.dao.TimeDAO;
+import com.example.model.ClassificacaoLinha;
+import com.example.model.Inscricao;
+import com.example.model.Partida;
+import com.example.model.Time;
+import com.example.util.JsonUtil;
+
 @WebServlet("/classificacao")
 public class ClassificacaoController extends HttpServlet {
 
     private PartidaDAO partidaDao = new PartidaDAO();
     private InscricaoDAO inscricaoDao = new InscricaoDAO();
-    private TimeDao timeDao = new TimeDao();
+    private TimeDAO timeDao = new TimeDAO();
     private ConfiguracaoDAO configDao = new ConfiguracaoDAO();
 
     @Override

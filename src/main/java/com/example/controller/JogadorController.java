@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.dao.JogadorDAO;
-import com.example.dao.TimeDao;
+import com.example.dao.TimeDAO;
 import com.example.model.Jogador;
 import com.example.util.JsonUtil;
 
@@ -19,7 +19,7 @@ import com.example.util.JsonUtil;
 public class JogadorController extends HttpServlet {
 
     private JogadorDAO dao = new JogadorDAO();
-    private TimeDao timeDao = new TimeDao();
+    private TimeDAO timeDao = new TimeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

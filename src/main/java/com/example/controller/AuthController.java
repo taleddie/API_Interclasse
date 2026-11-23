@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dao.UsuarioDao;
+import com.example.dao.UsuarioDAO;
 import com.example.model.Usuario;
 import com.example.util.JsonUtil;
 import com.example.util.SessaoUtil;
@@ -27,7 +27,7 @@ import java.sql.SQLException;
 @WebServlet("/auth/*")
 public class AuthController extends HttpServlet {
 
-    private UsuarioDao dao = new UsuarioDao();
+    private UsuarioDAO dao = new UsuarioDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

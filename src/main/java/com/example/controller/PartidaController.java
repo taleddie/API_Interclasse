@@ -1,18 +1,19 @@
 package com.example.controller;
 
-import com.example.dao.PartidaDAO;
-import com.example.dao.InscricaoDAO;
-import com.example.model.Partida;
-import com.example.util.JsonUtil;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+
+import com.example.dao.InscricaoDAO;
+import com.example.dao.PartidaDAO;
+import com.example.model.Partida;
+import com.example.util.JsonUtil;
 
 @WebServlet("/partidas")
 public class PartidaController extends HttpServlet {
@@ -31,8 +32,17 @@ public class PartidaController extends HttpServlet {
                 return;
             }
 
+            //quando o usuario nao quer uma partida especifica, mas uma lista de todas elas
             if (id == null) {
                 List<Partida> partidas = dao.listar();
+                String status = request.getParameter("status");
+                String data = request.getParameter("data");
+                if (status != null) {
+                    partidas.removeIf(p -> !status.equals(p.getStatus()));
+                }
+                if (data != null) {
+                    partidas.removeIf(p -> !data.equals(p.getData()));
+                }
                 JsonUtil.enviar(response, partidas);
                 return;
             }
