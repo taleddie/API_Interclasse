@@ -15,30 +15,36 @@ e o restante do sistema é implementado pelos alunos a partir das atividades des
 mvn tomcat7:run
 ```
 
-A API fica em `http://localhost:8082/meu-servlet/api`.
+A API fica em `http://localhost:8082/api/`.
 
 > O banco `interclasse.db` (SQLite) é criado automaticamente na primeira conexão,
 > junto com as tabelas e os dados iniciais.
 
-**Teste rápido:** `GET http://localhost:8082/meu-servlet/api`
+**Teste rápido:** `GET http://localhost:8082/api/` (com a barra no final)
 
 > O `interclasse.db` é criado na pasta do projeto. Para começar do zero, apague o arquivo
 > e suba o servidor de novo.
 
 ### Testando com curl
 
-```bash
+> **Windows (PowerShell):** use `curl.exe` (com `.exe`), porque `curl` sozinho é um atalho para outro comando.
+> O `--%` logo depois evita que o PowerShell estrague as aspas do JSON, que ficam escapadas com `\"`.
+> No Linux/Mac use `curl` normal, sem o `--%`.
+>
+> Quase todas as rotas exigem login. Só `/api/` e `/api/auth/*` são livres.
+
+```powershell
 # cadastra participante
-curl -X POST http://localhost:8082/meu-servlet/api/auth/registrar -H "Content-Type: application/json" -d '{"nome":"Ana Souza","email":"ana@etec.sp.gov.br","senha":"123456"}'
+curl.exe --% -X POST http://localhost:8082/api/auth/registrar -H "Content-Type: application/json" -d "{\"nome\":\"Ana Souza\",\"email\":\"ana@etec.sp.gov.br\",\"senha\":\"123456\"}"
 
 # cadastra organizador (precisa da chave mestra)
-curl -X POST http://localhost:8082/meu-servlet/api/auth/registrar-organizador -H "Content-Type: application/json" -d '{"nome":"Prof Carlos","email":"carlos@etec.sp.gov.br","senha":"123456","chaveMestra":"ETEC-INTERCLASSE-2026"}'
+curl.exe --% -X POST http://localhost:8082/api/auth/registrar-organizador -H "Content-Type: application/json" -d "{\"nome\":\"Prof Carlos\",\"email\":\"carlos@etec.sp.gov.br\",\"senha\":\"123456\",\"chaveMestra\":\"ETEC-INTERCLASSE-2026\"}"
 
 # login (use -c cookies.txt para manter a sessao)
-curl -X POST http://localhost:8082/meu-servlet/api/auth/login -H "Content-Type: application/json" -c cookies.txt -d '{"email":"carlos@etec.sp.gov.br","senha":"123456"}'
+curl.exe --% -X POST http://localhost:8082/api/auth/login -H "Content-Type: application/json" -c cookies.txt -d "{\"email\":\"carlos@etec.sp.gov.br\",\"senha\":\"123456\"}"
 
-# cria um time
-curl -X POST http://localhost:8082/meu-servlet/api/times -H "Content-Type: application/json" -b cookies.txt -d '{"nome":"Falcao da Silva","cor":"Azul","responsavel":"Carlos","contato":"11988887777"}'
+# cria um time (usa a sessao salva com -b cookies.txt)
+curl.exe --% -X POST http://localhost:8082/api/times -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"Falcao da Silva\",\"cor\":\"Azul\",\"responsavel\":\"Carlos\",\"contato\":\"11988887777\"}"
 ```
 
 **Postman/Insomnia:** importe a coleção ou use as URLs acima. Lembre-se de ativar
@@ -265,7 +271,7 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
 - **SQL:** sempre `PreparedStatement`, nunca concatenar string.
 - **Controller:** valida a entrada, chama o DAO e monta a resposta. Sem SQL na controller.
 
-- ## 9. Testes manuais
+## 9. Testes manuais
 
 Todos os comandos usam o `curl.exe` no **PowerShell do Windows**. O `--%` logo depois do `curl.exe` evita que o PowerShell estrague as aspas do JSON. No CMD, Linux ou Mac, tire o `--%` e use `curl`.
 
@@ -304,4 +310,125 @@ curl.exe --% -X POST http://localhost:8082/api/inscricoes -H "Content-Type: appl
 
 # 3. Organizador confirma
 curl.exe --% -X PUT "http://localhost:8082/api/inscricoes?id=1" -H "Content-Type: application/json" -b cookies.txt -d "{\"status\":\"CONFIRMADA\"}"
-curl.exe --% -X PUT "http://localhost:8082/api/inscricoes?id=2" -H "Content-Type:
+curl.exe --% -X PUT "http://localhost:8082/api/inscricoes?id=2" -H "Content-Type: application/json" -b cookies.txt -d "{\"status\":\"CONFIRMADA\"}"
+
+# 4. Agenda a partida, atualiza o placar e finaliza
+curl.exe --% -X POST http://localhost:8082/api/partidas -H "Content-Type: application/json" -b cookies.txt -d "{\"modalidadeId\":1,\"timeAId\":1,\"timeBId\":2}"
+curl.exe --% -X PUT "http://localhost:8082/api/partidas?id=1" -H "Content-Type: application/json" -b cookies.txt -d "{\"placarA\":2,\"placarB\":1}"
+curl.exe --% -X POST "http://localhost:8082/api/partidas?id=1&acao=finalizar" -b cookies.txt
+
+# 5. Classificação
+curl.exe --% "http://localhost:8082/api/classificacao?modalidadeId=1" -b cookies.txt
+```
+
+**Resultado esperado:** o Time A aparece em 1º com 3 pontos e o Time B em 2º com 0 ponto.
+
+### 9.3 Checklist por rota
+
+Legenda: entrada válida, entrada inválida, sem permissão, recurso inexistente.
+
+#### Auth
+| Teste | Requisição | Esperado |
+|---|---|---|
+| Entrada válida | `POST /auth/registrar-organizador` com a chave certa | 200, `tipo: ORGANIZADOR` |
+| Chave errada | mesma rota com `chaveMestra` errada | 403 `chave mestra invalida` |
+| Campos faltando | `POST /auth/registrar` com corpo `{}` | 400 `nome, email e senha sao obrigatorios` |
+| Email repetido | cadastrar o mesmo email duas vezes | 409 `email ja cadastrado` |
+| Login válido | `POST /auth/login` | 200 e cookie salvo |
+| Senha errada | `POST /auth/login` com senha errada | 401 `email ou senha invalidos` |
+| Sem login | `GET /auth/me` sem `-b cookies.txt` | 401 |
+
+#### Times, Turmas, Modalidades (CRUD)
+| Teste | Requisição | Esperado |
+|---|---|---|
+| Criar válido | `POST` com os campos obrigatórios | 200 com `id` |
+| Criar inválido | `POST` com corpo `{}` | 400 (campo obrigatório) |
+| Buscar existente | `GET ...?id=1` | 200 |
+| Buscar inexistente | `GET ...?id=999` | 404 |
+| Id inválido | `GET ...?id=abc` | 400 `id invalido` |
+| Atualizar | `PUT ...?id=1` com corpo válido | 200 |
+| Atualizar inexistente | `PUT ...?id=999` | 404 |
+| Remover | `DELETE ...?id=1` | 200 |
+| Remover inexistente | `DELETE ...?id=999` | 404 |
+| Sem login | qualquer rota sem cookie | 401 `faca login para continuar` |
+| Sem permissão | `POST`/`PUT`/`DELETE` logado como participante | 403 `acesso restrito a organizadores` |
+
+Campos obrigatórios: Time e Modalidade pedem `nome`; Turma pede `nome`, `curso` e `ano`.
+
+#### Modalidade: ativar e desativar
+```powershell
+curl.exe --% -X PUT "http://localhost:8082/api/modalidades?id=1" -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"FUTSAL\",\"ativo\":0}"
+```
+Esperado: 200 com `ativo: 0`. Com `"ativo":5`, esperado 400 `ativo deve ser 0 ou 1`.
+
+#### Inscrições
+| Teste | Requisição | Esperado |
+|---|---|---|
+| Inscrever válido | `POST` com `timeId` e `modalidadeId` | 200, `status: PENDENTE` |
+| Campos faltando | `POST` com corpo `{}` | 400 |
+| Time já inscrito | `POST` repetido para o mesmo time | 409 `Time ja esta inscrito em uma modalidade` |
+| Participante se inscreve | `POST` logado como participante | 200 (única escrita liberada para participante) |
+| Confirmar | `PUT ?id=1` com `{"status":"CONFIRMADA"}` | 200 |
+| Status inválido | `PUT ?id=1` com `{"status":"XPTO"}` | 400 `status deve ser CONFIRMADA ou NEGADA` |
+| Inscrição inexistente | `PUT ?id=999` | 404 |
+| Filtrar por modalidade | `GET ?modalidadeId=1` | 200 com a lista |
+
+#### Partidas
+| Teste | Requisição | Esperado |
+|---|---|---|
+| Agendar válida | `POST` com times confirmados | 200, `status: AGENDADA` |
+| Times iguais | `POST` com `timeAId` = `timeBId` | 400 `Os times devem ser diferentes` |
+| Time não confirmado | `POST` com time `PENDENTE` | 409 `Os dois times precisam estar confirmados na mesma modalidade` |
+| Atualizar placar | `PUT ?id=1` com `placarA`/`placarB` | 200 |
+| Placar negativo | `PUT` com `"placarA":-1` | 400 |
+| Finalizar | `POST ?id=1&acao=finalizar` | 200, `status: FINALIZADA` |
+| Finalizar de novo | mesmo comando | 409 `Partida ja esta finalizada` |
+| Placar após finalizar | `PUT ?id=1` depois de finalizada | 409 `Partida finalizada nao pode ter o placar alterado` |
+| Filtros | `GET ?status=AGENDADA` ou `?data=2026-11-20` | 200 só com as que combinam |
+| Partida inexistente | `GET ?id=999` | 404 |
+
+#### Configuração e classificação
+```powershell
+# lista as regras de pontuação
+curl.exe --% http://localhost:8082/api/configuracao -b cookies.txt
+
+# muda os pontos da vitória para 2
+curl.exe --% -X PUT "http://localhost:8082/api/configuracao?chave=PONTOS_VITORIA" -H "Content-Type: application/json" -b cookies.txt -d "{\"valor\":\"2\"}"
+
+# classificação de uma modalidade
+curl.exe --% "http://localhost:8082/api/classificacao?modalidadeId=1" -b cookies.txt
+```
+| Teste | Esperado |
+|---|---|
+| `PUT` com valor `abc` | 400 `valor deve ser um numero inteiro` |
+| `PUT` com valor `-1` | 400 `valor nao pode ser negativo` |
+| `PUT ?chave=PERMITE_EMPATE` com valor `5` | 400 `PERMITE_EMPATE deve ser 0 ou 1` |
+| `PUT ?chave=XYZ` | 404 `Configuracao nao encontrada` |
+| `GET /classificacao` sem `modalidadeId` | 400 `modalidadeId e obrigatorio` |
+
+#### Jogadores e ranking (bônus 16)
+```powershell
+curl.exe --% -X POST http://localhost:8082/api/jogadores -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"Ana\",\"timeId\":1,\"gols\":5,\"assistencias\":2}"
+curl.exe --% -X POST http://localhost:8082/api/jogadores -H "Content-Type: application/json" -b cookies.txt -d "{\"nome\":\"Bia\",\"timeId\":1,\"gols\":3,\"assistencias\":7}"
+curl.exe --% "http://localhost:8082/api/ranking?tipo=gols" -b cookies.txt
+curl.exe --% "http://localhost:8082/api/ranking?tipo=assistencias" -b cookies.txt
+```
+Esperado: no ranking de gols a Ana vem na frente (5 gols), e no de assistências a Bia (7). Com `?tipo=xyz` o esperado é 400.
+
+#### Teste de permissão (participante)
+```powershell
+# Cadastra participante e faz login com outro arquivo de cookie
+curl.exe --% -X POST http://localhost:8082/api/auth/registrar -H "Content-Type: application/json" -d "{\"nome\":\"Ana Souza\",\"email\":\"ana@etec.sp.gov.br\",\"senha\":\"123456\"}"
+curl.exe --% -X POST http://localhost:8082/api/auth/login -H "Content-Type: application/json" -c cookies-part.txt -d "{\"email\":\"ana@etec.sp.gov.br\",\"senha\":\"123456\"}"
+
+# Participante lê (deve funcionar) e tenta criar (deve ser barrado)
+curl.exe --% http://localhost:8082/api/times -b cookies-part.txt
+curl.exe --% -X POST http://localhost:8082/api/times -H "Content-Type: application/json" -b cookies-part.txt -d "{\"nome\":\"Time C\"}"
+```
+Esperado: o `GET` responde 200 e o `POST` responde 403 `acesso restrito a organizadores`.
+
+### 9.4 Problemas conhecidos / observações
+- Rotas protegidas exigem login. Sem cookie a resposta é `401 faca login para continuar`.
+- Mensagens `GRAVE ... module-info.class` no terminal do Tomcat 7 são inofensivas.
+- JSON malformado (ou aspas estragadas pelo PowerShell) devolve 500 em vez de 400.
+- Para finalizar uma partida use `POST /api/partidas?id=1&acao=finalizar`.
