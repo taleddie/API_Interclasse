@@ -233,20 +233,20 @@ Cada atividade é um pedaço do sistema. Sugestão: uma dupla por atividade.
       - finalizar partida
 
 ### Fase 3 — Regras avançadas — Jolea
-- [ ] **8. `ConfiguracaoDao` + rota** — ler e alterar `PONTOS_VITORIA`, `PONTOS_EMPATE`,
+- [X] **8. `ConfiguracaoDao` + rota** — ler e alterar `PONTOS_VITORIA`, `PONTOS_EMPATE`,
       `PONTOS_DERROTA`, `PERMITE_EMPATE`.
-- [ ] **9. `ClassificacaoController`** — `/api/classificacao?modalidadeId=1`:
+- [X] **9. `ClassificacaoController`** — `/api/classificacao?modalidadeId=1`:
       calcula pontos, vitórias, saldo e ordena conforme a seção 5.4.
-- [ ] **10. Validar empate** — se `PERMITE_EMPATE = 0`, bloquear a finalização de partida empatada.
-- [ ] **11. Proteger as rotas de escrita** — mover o CRUD de organizers para `/api/admin/*`
+- [X] **10. Validar empate** — se `PERMITE_EMPATE = 0`, bloquear a finalização de partida empatada.
+- [X] **11. Proteger as rotas de escrita** — mover o CRUD de organizers para `/api/admin/*`
       (já existe o `OrganizadorFilter`) e deixar as rotas de leitura livres para logados.
 
 ### Fase 4 — Acabamento — Jolea
-- [ ] **12. Validações** — nome obrigatório, email válido, campos não vazios,
+- [X] **12. Validações** — nome obrigatório, email válido, campos não vazios,
       mensagens de erro claras em JSON.
-- [ ] **13. Documentar** — documentar todas as rotas no README e adicionar exemplos
+- [X] **13. Documentar** — documentar todas as rotas no README e adicionar exemplos
       de requisição/resposta (curl ou Postman).
-- [ ] **14. Testes manuais** — checklist de teste de cada rota (entrada válida, entrada
+- [X] **14. Testes manuais** — checklist de teste de cada rota (entrada válida, entrada
       inválida, sem permissão, recurso inexistente).
 
 ### Bônus
